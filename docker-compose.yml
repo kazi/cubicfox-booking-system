@@ -1,0 +1,46 @@
+version: "3"
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    ports:
+      - "8080:80"
+    networks:
+      - internal
+    volumes:
+      - .:/var/www/html/
+      - ./logs/nginx:/var/log/nginx/
+  php:
+    depends_on:
+      - database
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    networks:
+      - internal
+    volumes:
+      - .:/var/www/html/
+      - ./logs/php.log:/var/log/fpm-php.www.log
+    links:
+      - database
+  database:
+    build:
+      context: .
+      dockerfile: docker/mysql8/Dockerfile
+    restart: "always"
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: booking
+      MYSQL_USER: cubicfoxmysql
+      MYSQL_PASSWORD: cubicfoxmysql
+      TZ: Europe/Budapest
+networks:
+  internal:
+    driver: bridge
+volumes:
+  db_data:
