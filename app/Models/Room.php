@@ -20,4 +20,9 @@ class Room extends Model
     {
         return $this->hasMany(Offer::class)->orderBy('day');
     }
+
+    public function reservations(): HasMany
+    {
+        return $this->hasMany(Reservation::class);
+    }
 }
