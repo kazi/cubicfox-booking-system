@@ -13,6 +13,4 @@ RUN docker-php-ext-configure pcntl --enable-pcntl \
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-#COPY --from=composer:2.0 /usr/bin/composer /usr/local/bin/composer
-#COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
-#RUN composer install
+RUN composer install
