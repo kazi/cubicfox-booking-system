@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOffersTable extends Migration
+class CreateRoomsTable extends Migration
 {
     public function up()
     {
@@ -18,6 +18,6 @@ class CreateOffersTable extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('offers');
+        Schema::dropIfExists('rooms');
     }
 }
