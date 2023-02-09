@@ -9,7 +9,7 @@ services:
     networks:
       - internal
     volumes:
-      - ./www:/var/www/html/public
+      - .:/var/www/html/
       - ./logs/nginx:/var/log/nginx/
   php:
     depends_on:
@@ -20,7 +20,7 @@ services:
     networks:
       - internal
     volumes:
-      - ./www:/var/www/html/
+      - .:/var/www/html/
       - ./logs/php.log:/var/log/fpm-php.www.log
     links:
       - database
