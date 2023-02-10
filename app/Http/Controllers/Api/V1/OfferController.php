@@ -1,21 +1,28 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
+use App\Filters\Api\V1\OffersFilter;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOfferRequest;
 use App\Http\Requests\UpdateOfferRequest;
+use App\Http\Resources\V1\OfferCollection;
 use App\Models\Offer;
+use Illuminate\Http\Request;
 
 class OfferController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function index(Request $request, OffersFilter $offersFilter): OfferCollection
     {
-        //
+        echo "HELLO"; exit();
+
+        $filterItems = $offersFilter->transform($request);
+
+        $offers = Offer::where($filterItems)
+            ->with('room.hotel')
+            ->paginate();
+
+        return new OfferCollection($offers->appends($request->query()));
     }
 
     /**

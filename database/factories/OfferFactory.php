@@ -14,7 +14,10 @@ class OfferFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'room_id' => $this->faker->numberBetween(1,10),
+            'day' => $this->faker->date('Y-m-d'),
+            'price' => $this->faker->numberBetween(1000,2000),
+            'is_available' => $this->faker->boolean()
         ];
     }
 }
