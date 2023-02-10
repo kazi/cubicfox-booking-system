@@ -6,6 +6,8 @@ services:
       dockerfile: docker/nginx/Dockerfile
     ports:
       - "8080:80"
+    links:
+        - database
     networks:
       - internal
     volumes:
@@ -39,6 +41,8 @@ services:
       MYSQL_USER: cubicfoxmysql
       MYSQL_PASSWORD: cubicfoxmysql
       TZ: Europe/Budapest
+    networks:
+        - internal
 networks:
   internal:
     driver: bridge
