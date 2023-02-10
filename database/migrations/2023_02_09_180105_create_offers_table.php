@@ -8,10 +8,13 @@ class CreateOffersTable extends Migration
 {
     public function up()
     {
-        Schema::create('rooms', function (Blueprint $table) {
+        Schema::create('offers', function (Blueprint $table) {
             $table->id();
-            $table->integer('hotel_id');
-            $table->string('name');
+            $table->integer('room_id')->nullable(false);
+            $table->date('day')->nullable(false);
+            $table->decimal('price', 10, 2)->nullable(false);
+            $table->boolean('is_available')->default(true);
+            $table->unique(['room_id', 'day']);
             $table->timestamps();
         });
     }
