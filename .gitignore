@@ -15,3 +15,5 @@ yarn-error.log
 /.vscode
 /logs/nginx/access.log
 /logs/nginx/error.log
+/_ide_helper.php
+/.phpstorm.meta.php
