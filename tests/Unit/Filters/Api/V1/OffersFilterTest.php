@@ -1,6 +1,6 @@
 <?php
 
-namespace Unit\Filters;
+namespace Unit\Filters\Api\V1;
 
 use App\Filters\Api\V1\OffersFilter;
 use Exception;
