@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\OfferController;
+use App\Http\Controllers\Api\V1\VacancyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,5 +21,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], function() {
-    Route::get('offers', [OfferController::class, 'index']);
+    Route::get('roomoffers', [OfferController::class, 'index']);
 });

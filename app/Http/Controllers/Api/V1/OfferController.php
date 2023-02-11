@@ -6,23 +6,34 @@ use App\Filters\Api\V1\OffersFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOfferRequest;
 use App\Http\Requests\UpdateOfferRequest;
-use App\Http\Resources\V1\OfferCollection;
+use App\Http\Resources\V1\RoomOfferCollection;
 use App\Models\Offer;
+use App\Services\OfferService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Throwable;
 
 class OfferController extends Controller
 {
-    public function index(Request $request, OffersFilter $offersFilter): OfferCollection
-    {
-        echo "HELLO"; exit();
+    public function index(
+        Request $request,
+        OffersFilter $offersFilter,
+        OfferService $offerService
+    ): RoomOfferCollection|JsonResponse {
+        try {
+            $roomOffers = $offerService->getRoomOffers($request, $offersFilter);
+        } catch (Throwable $throwable) {
+            return response()->json(
+                [
+                    'status' => false,
+                    'message' => $throwable->getMessage(),
+                ],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
 
-        $filterItems = $offersFilter->transform($request);
-
-        $offers = Offer::where($filterItems)
-            ->with('room.hotel')
-            ->paginate();
-
-        return new OfferCollection($offers->appends($request->query()));
+        return new RoomOfferCollection($roomOffers);
     }
 
     /**

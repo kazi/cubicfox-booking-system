@@ -6,9 +6,8 @@ use Illuminate\Http\Request;
 
 class ApiFilter {
 
-    protected array $allowedApiParams = [];
-
-    protected array $columnMap = [];
+    protected const OPERATORS = 'operators';
+    protected const MAPPING = 'mapping';
 
     protected array $operatorMap = [
         'eq' => '=',
@@ -18,20 +17,20 @@ class ApiFilter {
         'lte' => '<='
     ];
 
-    public function transform(Request $request): array
+    public function transform(Request $request, array $columnMap): array
     {
         $queryArray = [];
 
-        foreach ($this->allowedApiParams as $field => $operators) {
-            $query = $request->query($field);
+        foreach ($columnMap as $fieldName => $fieldConfig) {
+            $query = $request->query($fieldName);
 
             if (empty($query)) {
                 continue;
             }
 
-            $column = $this->columnMap[$field] ?? $field;
+            $column = $fieldConfig[self::MAPPING] ?? $fieldName;
 
-            foreach ($operators as $operator) {
+            foreach ($fieldConfig[self::OPERATORS] as $operator) {
                 if (isset($query[$operator])) {
                     $queryArray[] = [$column, $this->operatorMap[$operator], $query[$operator]];
                 }

@@ -18,9 +18,10 @@ class OfferResource extends JsonResource
     public function toArray($request): array|Arrayable|JsonSerializable
     {
         return [
-            'id' => $this->id,
+            'name' => $this->room->name,
             'day' => $this->day,
             'price' => $this->price,
+            'total_price' => $this->total_price,
             'room' => RoomResource::make($this->whenLoaded('room'))
         ];
     }
