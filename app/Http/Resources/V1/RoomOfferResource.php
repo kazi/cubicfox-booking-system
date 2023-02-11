@@ -18,7 +18,6 @@ class RoomOfferResource extends JsonResource
             'roomId' => $this->id,
             'name' => $this->name,
             'hotel' => $this->hotel_name,
-            'number_of_days' => $this->number_of_days,
             'totalPrice' => $this->total_price,
             'arrivalDate' => $this->arrival_date,
             'departureDate' => $this->departure_date,
