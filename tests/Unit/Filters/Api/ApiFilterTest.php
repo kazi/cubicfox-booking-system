@@ -10,7 +10,7 @@ use Tests\TestCase;
 
 class ApiFilterTest extends TestCase
 {
-    public function testTransform()
+    public function testTransform(): void
     {
         $request = Mockery::mock(Request::class);
         $request->shouldReceive('query')
