@@ -7,8 +7,8 @@ use DateTime;
 use Exception;
 use Illuminate\Http\Request;
 
-class OffersFilter extends ApiFilter {
-
+class OffersFilter extends ApiFilter
+{
     private array $offerFilterColumnMap = [
         'firstDay' => [
             self::OPERATORS => ['gte'],
@@ -28,13 +28,6 @@ class OffersFilter extends ApiFilter {
         ]
     ];
 
-    private array $roomFilterColumnMap = [
-        'isAvailable' => [
-            self::OPERATORS => ['eq'],
-            self::MAPPING => 'available_for_reservation'
-        ]
-    ];
-
     /**
      * @param Request $request
      * @return int|null
@@ -42,12 +35,15 @@ class OffersFilter extends ApiFilter {
      */
     public function getDaysBetweenDates(Request $request): ?int
     {
-        if (empty($request->query('firstDay')) || empty($request->query('lastDay'))) {
+        $firstDay = $request->query('firstDay');
+        $lastDay = $request->query('lastDay');
+
+        if (empty($firstDay) || empty($lastDay)) {
             return null;
         }
 
-        $firstDay = new DateTime(array_values($request->query('firstDay'))[0]);
-        $lastDay = new DateTime(array_values($request->query('lastDay'))[0]);
+        $firstDay = new DateTime(reset($firstDay));
+        $lastDay = new DateTime(reset($lastDay));
         $difference = $firstDay->diff($lastDay);
 
         return $difference->days + 1;
@@ -59,10 +55,5 @@ class OffersFilter extends ApiFilter {
         $offerFilterItems[] = ['is_available', '=', 1];
 
         return $offerFilterItems;
-    }
-
-    public function getRoomFilterItems(Request $request): array
-    {
-        return $this->transform($request, $this->roomFilterColumnMap);
     }
 }
