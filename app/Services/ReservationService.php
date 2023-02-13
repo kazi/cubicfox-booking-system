@@ -15,6 +15,15 @@ class ReservationService
     private const AVAILABLE = true;
     private const ERROR_MESSAGE_ROOM_NOT_AVAILABLE = 'The selected room is not available for that period.';
 
+    /**
+     * @param int $userId
+     * @param int $roomId
+     * @param string $firstDay
+     * @param string $lastDay
+     * @return Reservation|null
+     * @throws RoomNotAvailableException
+     * @throws Throwable
+     */
     public function makeReservationForRoom(int $userId, int $roomId, string $firstDay, string $lastDay): ?Reservation
     {
         if (!$this->isRoomAvailableForInterval($roomId, $firstDay, $lastDay)) {
@@ -39,6 +48,8 @@ class ReservationService
             DB::commit();
         } catch (Throwable $throwable) {
             DB::rollBack();
+
+            throw $throwable;
         }
 
         return $reservation ?? null;
@@ -47,6 +58,7 @@ class ReservationService
     /**
      * @param int $reservationId
      * @param int $userId
+     * @throws Throwable
      */
     public function cancelReservation(int $reservationId, int $userId): void
     {
