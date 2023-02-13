@@ -23,7 +23,7 @@ class ReservationController extends Controller
         return
             new ReservationCollection(
                 Reservation::where($reservationsFilter->getReservationFilterItems($request))
-               //     ->where('reservations.user_id', '=', Auth::id())
+                    ->where('reservations.user_id', '=', Auth::id())
                     ->with('room.hotel')
                     ->paginate()
                     ->appends($request->query())
