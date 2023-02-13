@@ -38,9 +38,11 @@ class Reservation extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'room_id',
         'arrival_date',
-        'departure_date'
+        'departure_date',
+        'price'
     ];
 
     public function room(): BelongsTo

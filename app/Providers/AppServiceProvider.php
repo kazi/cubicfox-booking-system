@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 use App\Filters\Api\V1\OffersFilter;
+use App\Filters\Api\V1\ReservationsFilter;
+use App\Services\OfferService;
+use App\Services\ReservationService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -16,6 +19,15 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(OffersFilter::class, function ($app) {
             return new OffersFilter();
+        });
+        $this->app->singleton(OfferService::class, function ($app) {
+            return new OfferService();
+        });
+        $this->app->singleton(ReservationService::class, function ($app) {
+            return new ReservationService();
+        });
+        $this->app->singleton(ReservationsFilter::class, function ($app) {
+            return new ReservationsFilter();
         });
     }
 
