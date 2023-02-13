@@ -4,7 +4,6 @@ namespace App\Filters\Api\V1;
 
 use App\Filters\Api\ApiFilter;
 use DateTime;
-use Exception;
 use Illuminate\Http\Request;
 
 class OffersFilter extends ApiFilter
@@ -28,22 +27,14 @@ class OffersFilter extends ApiFilter
         ]
     ];
 
-    /**
-     * @param Request $request
-     * @return int|null
-     * @throws Exception
-     */
-    public function getDaysBetweenDates(Request $request): ?int
+    public function getDaysBetweenDates(Request $request): int
     {
-        $firstDay = $request->query('firstDay');
-        $lastDay = $request->query('lastDay');
-
-        if (empty($firstDay) || empty($lastDay)) {
-            return null;
-        }
+        $firstDay = $request->query('firstDay', $this->getDefaultValueForField($request, 'firstDay'));
+        $lastDay = $request->query('lastDay', $this->getDefaultValueForField($request, 'lastDay'));
 
         $firstDay = new DateTime(reset($firstDay));
         $lastDay = new DateTime(reset($lastDay));
+
         $difference = $firstDay->diff($lastDay);
 
         return $difference->days + 1;
@@ -51,9 +42,31 @@ class OffersFilter extends ApiFilter
 
     public function getOfferFilterItems(Request $request): array
     {
-        $offerFilterItems = $this->transform($request, $this->offerFilterColumnMap);
+        $offerFilterItems = $this->transform($request, $this->getColumnMapWithDefaultValues($request));
         $offerFilterItems[] = ['is_available', '=', 1];
 
         return $offerFilterItems;
+    }
+
+    private function getColumnMapWithDefaultValues(Request $request): array
+    {
+        $columnMap = $this->offerFilterColumnMap;
+        $firstDayDefault = ['gte' => date('Y-m-d', strtotime('now'))];
+
+        $columnMap['firstDay'][self::DEFAULT_VALUE] = $firstDayDefault;
+
+        if (empty($request->query('lastDay'))) {
+            $firstDayValue = $request->query('firstDay', $firstDayDefault);
+            $columnMap['lastDay'][self::DEFAULT_VALUE] = ['lte' => $firstDayValue['gte']];
+        }
+
+        return $columnMap;
+    }
+
+    private function getDefaultValueForField(Request $request, string $fieldName): ?array
+    {
+        $columnMap = $this->getColumnMapWithDefaultValues($request);
+
+        return $columnMap[$fieldName][self::DEFAULT_VALUE] ?? null;
     }
 }

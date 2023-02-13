@@ -8,6 +8,9 @@ class ApiFilter {
 
     protected const OPERATORS = 'operators';
     protected const MAPPING = 'mapping';
+    protected const DEFAULT_VALUE = 'default';
+
+    protected array $columnMap = [];
 
     protected array $operatorMap = [
         'eq' => '=',
@@ -25,7 +28,12 @@ class ApiFilter {
             $query = $request->query($fieldName);
 
             if (empty($query)) {
-                continue;
+                if (!empty($fieldConfig[self::DEFAULT_VALUE])) {
+                    $query = $fieldConfig[self::DEFAULT_VALUE];
+                }
+                else {
+                    continue;
+                }
             }
 
             $column = $fieldConfig[self::MAPPING] ?? $fieldName;
@@ -38,5 +46,10 @@ class ApiFilter {
         }
 
         return $queryArray;
+    }
+
+    protected function getColumnMap(): array
+    {
+        return $this->columnMap;
     }
 }

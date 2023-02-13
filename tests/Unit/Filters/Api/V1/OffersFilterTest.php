@@ -106,9 +106,9 @@ class OffersFilterTest extends TestCase
     }
 
     /**
-     * @dataProvider providerGetDaysBetweenDatesReturnsNull
+     * @dataProvider providerGetDaysBetweenDatesReturnsZero
      */
-    public function testGetDaysBetweenDatesReturnsNull(?string $firstDay, ?string $lastDay): void
+    public function testGetDaysBetweenDatesReturnsZero(?string $firstDay, ?string $lastDay): void
     {
         $mockRequest = Mockery::mock(Request::class);
 
@@ -121,10 +121,10 @@ class OffersFilterTest extends TestCase
             ->andReturn($lastDay);
 
         $offersFilter = new OffersFilter();
-        $this->assertNull($offersFilter->getDaysBetweenDates($mockRequest));
+        $this->assertEquals(0, $offersFilter->getDaysBetweenDates($mockRequest));
     }
 
-    public function providerGetDaysBetweenDatesReturnsNull(): array
+    public function providerGetDaysBetweenDatesReturnsZero(): array
     {
         return [
             'firstday_is_null' => [
