@@ -3,7 +3,8 @@ FROM php:8.0.5-fpm-alpine
 RUN apk add \
     git \
     unzip \
-    zip
+    zip \
+    bash
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 RUN install-php-extensions gd pdo_mysql bcmath zip intl opcache
@@ -12,7 +13,3 @@ RUN docker-php-ext-configure pcntl --enable-pcntl \
     pcntl
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-RUN COMPOSER_MEMORY_LIMIT=-1 composer install
-
-RUN php artisan migrate --seed
