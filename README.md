@@ -12,9 +12,9 @@ docker-compose up -d
 
 A foglalási rendszer egy Nginx alatt futó, MySQL-t használó Laravel alkalmazás.
 
-##Config
+## Config
 
-###Adatbázis
+### Adatbázis
 Az alkalmazás beállításait a .env fileban láthatjátok, ebből az adatbázis kapcsolathoz a következőkre lesz szükségetek, ha egy adatbázis kezelővel kapcsolódni szeretnétek:
 - DB_HOST=database
 - DB_PORT=3306
@@ -22,24 +22,24 @@ Az alkalmazás beállításait a .env fileban láthatjátok, ebből az adatbázi
 - DB_USERNAME=cubicfoxmysql 
 - DB_PASSWORD=cubicfoxmysql
 
-###Seeding
+### Seeding
 Az alkalmazás tartalmaz seeder file-okat, amik a containerbe belépve a  
 ```
 php aritsan migrate --seed
 ```
 paranccsal futtathatók. Ezek létrehoznak 3 hotelt (Hotel model, hotels tábla) szokákkal (Room model, rooms tábla), és egy hónapra előre generált ajánlatokkal (Offer model, offers tábla).
 
-###Defaults
+### Defaults
 További beállítási lehetőségekhez (pl. port mapping) a megfelelő Dockerfile-ok a /docker könyvtáron belül találhatók.
 
-##Felépítés, működés
+## Felépítés, működés
 
 A foglalási rendszerben ajánlatokat listázhatunk hotelekre és szobákre, megadott időszakokra. Ezt bejelentkezés nélkül tehetjük. A szobák elérhetőségeit az offers táblában találjátok az egyes napokra. Itt naponként változtatjatjátok az árat, amit az ajánlatokban szummázva szerepel majd az adott időszakra.
 
 A listázások felül a további műveletek bejelentkezés kötelesek. A rendszerben egy felhasználó fel van véve az alábbi email cím / jelszó kombinációval:
 
 ```
-pbooking@example.com / 123456 
+booking@example.com / 123456 
 ```
 
 A bejelentkezést követő válaszban egy tokent kaptok, a további műveletekhez ezt Bearer tokenként csatolnotok kell. A foglalás létrehozás, listázás és törlés a token küldésével együtt lehetséges. 
@@ -47,7 +47,7 @@ A bejelentkezést követő válaszban egy tokent kaptok, a további műveletekhe
 A létrehozott foglalásokat (Reservation) a reservations táblában látjátok. Sikeres foglalás esetén az adott szobák az érintett napokra már nem foglalhatók,
 és a foglalás ára sem változtatható a foglalt szobák árainak szerkesztésével.
 
-##Endpointok
+## Endpointok
 
 Az endpointok tesztelését Postman-nel végeztem, innét exportáltam egy collection-t, amit segítségetekre lehet. 
 
@@ -351,6 +351,6 @@ A request body tartalmazza a foglalás ID-ját:
 
 Sikeres kérés esetén a válasz üres lesz, 200 OK státusszal.
 
-##Unit testek
+## Unit testek
 
 Az alkalmazás 17 tesztet tartalmaz 25 assertionnel. A teszteket dockerben található PHP 8.0.5 alatt futtattam.

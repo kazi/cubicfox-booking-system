@@ -26,6 +26,8 @@ services:
       - ./logs/php.log:/var/log/fpm-php.www.log
     links:
       - database
+    ports:
+      - "9000:9000"
     environment:
       - COMPOSER_MEMORY_LIMIT=-1
     command: /bin/bash -c "composer install --optimize-autoloader --no-interaction --ansi && php artisan migrate --seed"
