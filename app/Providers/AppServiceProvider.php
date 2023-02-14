@@ -6,6 +6,7 @@ use App\Filters\Api\V1\OffersFilter;
 use App\Filters\Api\V1\ReservationsFilter;
 use App\Models\Offer;
 use App\Models\Reservation;
+use App\Models\Room;
 use App\Services\OfferService;
 use App\Services\ReservationService;
 use Illuminate\Support\ServiceProvider;
@@ -23,7 +24,11 @@ class AppServiceProvider extends ServiceProvider
             return new OffersFilter();
         });
         $this->app->singleton(OfferService::class, function ($app) {
-            return new OfferService();
+            return new OfferService(
+                new Room(),
+                new Offer(),
+                new OffersFilter()
+            );
         });
         $this->app->singleton(ReservationService::class, function ($app) {
             return new ReservationService(

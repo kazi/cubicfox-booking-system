@@ -18,7 +18,8 @@ class ReservationService
     private Offer $offerModel;
     private Reservation $reservationModel;
 
-    function __construct(Reservation $reservationModel, Offer $offerModel) {
+    function __construct(Reservation $reservationModel, Offer $offerModel)
+    {
         $this->reservationModel = $reservationModel;
         $this->offerModel = $offerModel;
     }

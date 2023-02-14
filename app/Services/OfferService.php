@@ -5,15 +5,18 @@ namespace App\Services;
 use App\Filters\Api\V1\OffersFilter;
 use App\Models\Offer;
 use App\Models\Room;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class OfferService
 {
-    public function getRoomOffers(Request $request, OffersFilter $offersFilter): LengthAwarePaginator
+    public function __construct(private Room $roomModel, private Offer $offerModel, private OffersFilter $offersFilter)
     {
-        $roomOffers = Room::select(
+    }
+
+    public function getRoomOffers(Request $request): Room
+    {
+        $roomOffers = $this->roomModel->select(
             [
                 'rooms.id',
                 'rooms.name',
@@ -22,15 +25,14 @@ class OfferService
                 'price_sum.arrival_date',
                 'price_sum.departure_date',
                 DB::raw(
-                    'CASE WHEN availability.number_of_days = ' . $offersFilter->getDaysBetweenDates(
-                        $request
-                    ) . ' THEN TRUE ELSE FALSE END AS available_for_reservation'
+                    'CASE WHEN availability.number_of_days = ' . $this->offersFilter->getDaysBetweenDates($request) .
+                    ' THEN TRUE ELSE FALSE END AS available_for_reservation'
                 )
             ]
         )
             ->distinct()
             ->joinSub(
-                Offer::select(
+                $this->offerModel::select(
                     [
                         'room_id',
                         DB::raw('SUM(price) as total_price'),
@@ -38,7 +40,7 @@ class OfferService
                         DB::raw('MAX(day) as departure_date'),
                     ]
                 )
-                    ->where($offersFilter->getOfferFilterItems($request))
+                    ->where($this->offersFilter->getOfferFilterItems($request))
                     ->groupBy('room_id'),
                 'price_sum',
                 function ($join) {
@@ -46,8 +48,8 @@ class OfferService
                 }
             )
             ->joinSub(
-                Offer::select(['room_id', DB::raw('COUNT(*) as number_of_days')])
-                    ->where($offersFilter->getOfferFilterItems($request))
+                $this->offerModel::select(['room_id', DB::raw('COUNT(*) as number_of_days')])
+                    ->where($this->offersFilter->getOfferFilterItems($request))
                     ->groupBy('room_id'),
                 'availability',
                 function ($join) {

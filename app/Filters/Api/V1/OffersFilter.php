@@ -27,17 +27,20 @@ class OffersFilter extends ApiFilter
         ]
     ];
 
+    public function calculateInclusiveDateDifference(string $firstDay, string $lastDay): int
+    {
+        $start = new DateTime($firstDay);
+        $end = new DateTime($lastDay);
+
+        return $start->diff($end)->days + 1;
+    }
+
     public function getDaysBetweenDates(Request $request): int
     {
         $firstDay = $request->query('firstDay', $this->getDefaultValueForField($request, 'firstDay'));
         $lastDay = $request->query('lastDay', $this->getDefaultValueForField($request, 'lastDay'));
 
-        $firstDay = new DateTime(reset($firstDay));
-        $lastDay = new DateTime(reset($lastDay));
-
-        $difference = $firstDay->diff($lastDay);
-
-        return $difference->days + 1;
+        return $this->calculateInclusiveDateDifference(reset($firstDay), reset($lastDay));
     }
 
     public function getOfferFilterItems(Request $request): array
@@ -57,7 +60,7 @@ class OffersFilter extends ApiFilter
 
         if (empty($request->query('lastDay'))) {
             $firstDayValue = $request->query('firstDay', $firstDayDefault);
-            $columnMap['lastDay'][self::DEFAULT_VALUE] = ['lte' => $firstDayValue['gte']];
+            $columnMap['lastDay'][self::DEFAULT_VALUE] = !is_null($firstDayValue) ? ['lte' => $firstDayValue['gte']] : ['lte' => date('Y-m-d', strtotime('now'))];
         }
 
         return $columnMap;

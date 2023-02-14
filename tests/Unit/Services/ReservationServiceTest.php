@@ -7,14 +7,11 @@ use App\Models\Offer;
 use App\Models\Reservation;
 use App\Services\ReservationService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
 use Tests\TestCase;
 
 class ReservationServiceTest extends TestCase
 {
-    use RefreshDatabase;
-
     public function testMakeReservation(): void
     {
         $userId = 1;
