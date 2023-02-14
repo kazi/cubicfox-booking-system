@@ -3,14 +3,22 @@
 Kedves Cubicfox!
 
 A repositoryban megtaláljátok a hotelszoba foglalási rendszer API backendjét.
-Az alkalmazás indításához:
+A foglalási rendszer egy Nginx alatt futó, MySQL-t használó Laravel alkalmazás.
+Az alkalmazás indításához hozzatok létre egy könyvtárat, lépjetek bele,  és ezeket a parancsokat futtassátok le:
 
 ```
 git clone https://github.com/kazi/cubicfox-booking-system.git .
+cp .env.example .example
 docker-compose up -d
+composer install
 ```
 
-A foglalási rendszer egy Nginx alatt futó, MySQL-t használó Laravel alkalmazás.
+Belépve a docker containerbe az adatbázis táblákat és a kezdeti tartalmat az alábbi paranccsal lehet létrehozni:
+```
+php artisan migrate --seed
+```
+
+Ezt követően böngészőből a http://127.0.0.1:8080 címen egy Laraveles welcome screent kell, hogy lássatok, illetve a később részletezett endpointok is elérhetők.
 
 ## Config
 
