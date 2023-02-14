@@ -13,4 +13,6 @@ RUN docker-php-ext-configure pcntl --enable-pcntl \
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-#RUN composer install
+RUN COMPOSER_MEMORY_LIMIT=-1 composer install
+
+RUN php artisan migrate --seed
