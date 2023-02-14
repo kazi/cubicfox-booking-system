@@ -15,15 +15,14 @@ class ReservationService
     private const AVAILABLE = true;
     private const ERROR_MESSAGE_ROOM_NOT_AVAILABLE = 'The selected room is not available for that period.';
 
-    /**
-     * @param int $userId
-     * @param int $roomId
-     * @param string $firstDay
-     * @param string $lastDay
-     * @return Reservation|null
-     * @throws RoomNotAvailableException
-     * @throws Throwable
-     */
+    private Offer $offerModel;
+    private Reservation $reservationModel;
+
+    function __construct(Reservation $reservationModel, Offer $offerModel) {
+        $this->reservationModel = $reservationModel;
+        $this->offerModel = $offerModel;
+    }
+
     public function makeReservationForRoom(int $userId, int $roomId, string $firstDay, string $lastDay): ?Reservation
     {
         if (!$this->isRoomAvailableForInterval($roomId, $firstDay, $lastDay)) {
@@ -33,7 +32,7 @@ class ReservationService
         try {
             DB::beginTransaction();
 
-            $reservation = Reservation::create(
+            $reservation = $this->reservationModel::create(
                 [
                     'user_id' => $userId,
                     'room_id' => $roomId,
@@ -62,7 +61,7 @@ class ReservationService
      */
     public function cancelReservation(int $reservationId, int $userId): void
     {
-        $reservation = Reservation::where(['id' => $reservationId, 'user_id' => $userId])->firstOrFail();
+        $reservation = $this->reservationModel::where(['id' => $reservationId, 'user_id' => $userId])->firstOrFail();
 
         try {
             DB::beginTransaction();
@@ -90,14 +89,14 @@ class ReservationService
         string $firstDay,
         string $lastDay
     ): void {
-        Offer::whereBetween('offers.day', [$firstDay, $lastDay])
+        $this->offerModel::whereBetween('offers.day', [$firstDay, $lastDay])
             ->where('offers.room_id', '=', $roomId)
             ->update(['is_available' => $isAvailable]);
     }
 
     private function isRoomAvailableForInterval(int $roomId, string $firstDay, string $lastDay): bool
     {
-        $availableDaysForRoom = Offer::whereBetween('offers.day', [$firstDay, $lastDay])
+        $availableDaysForRoom = $this->offerModel::whereBetween('offers.day', [$firstDay, $lastDay])
             ->where('offers.room_id', '=', $roomId)
             ->where('offers.is_available', '=', self::AVAILABLE)
             ->count();
@@ -107,7 +106,7 @@ class ReservationService
 
     private function sumPriceForInterval(int $roomId, string $firstDay, string $lastDay): float
     {
-        return Offer::whereBetween('day', [$firstDay, $lastDay])
+        return $this->offerModel::whereBetween('day', [$firstDay, $lastDay])
             ->where('room_id', '=', $roomId)
             ->sum('price');
     }
