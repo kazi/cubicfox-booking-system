@@ -30,9 +30,9 @@ services:
       - "9000:9000"
     environment:
       - COMPOSER_MEMORY_LIMIT=-1
-    command: /bin/bash -c "cp .env.example .env &&
-      composer install --optimize-autoloader --no-interaction --ansi
-        && php artisan migrate --seed"
+ #   command: /bin/bash -c "cp .env.example .env &&
+ #     composer install --optimize-autoloader --no-interaction --ansi
+ #       && php artisan migrate --seed"
 
   database:
     build:
