@@ -14,7 +14,7 @@ class OfferService
     {
     }
 
-    public function getRoomOffers(Request $request): Room
+    public function getRoomOffers(Request $request)
     {
         $roomOffers = $this->roomModel->select(
             [
