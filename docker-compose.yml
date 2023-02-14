@@ -33,7 +33,6 @@ services:
  #   command: /bin/bash -c "cp .env.example .env &&
  #     composer install --optimize-autoloader --no-interaction --ansi
  #       && php artisan migrate --seed"
-
   database:
     build:
       context: .
