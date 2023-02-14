@@ -36,10 +36,6 @@ Route::group(['prefix' => 'v1/reservations', 'namespace' => 'App\Http\Controller
     Route::delete('/', 'ReservationController@destroy');
 });
 
-Route::group(['prefix' => 'v1/offers', 'namespace' => 'App\Http\Controllers\Api\V1', 'middleware' => 'auth:sanctum'], function () {
+Route::group(['prefix' => 'v1/offers', 'namespace' => 'App\Http\Controllers\Api\V1'], function () {
     Route::get('/', 'OfferController@index');
 });
-
-//Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], function() {
-//    Route::get('roomoffers', [OfferController::class, 'index']);
-//});
